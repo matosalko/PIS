@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="sk">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PIS projekt</title>
+        <script src="../js/check.js"></script>
+    </head>
+    <body>
+        <div>
+            <script>
+                load_user();
+            </script>
+
+            <p id="name"></p>
+            <p id="insurance"></p>
+
+            <table id='ins_table'></table>
+
+            <script>
+                load_packages();
+            </script>
+
+            <button type="button" onclick="accept()">Prijat</button> 
+            <button type="button" onclick="change()">Upravit</button> 
+            <button type="button" onclick="denie()">Odmietnut</button> 
+        </div>
+    </body>
+</html>

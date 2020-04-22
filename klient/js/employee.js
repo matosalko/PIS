@@ -33,7 +33,7 @@ async function create_table() {
 
         td.addEventListener("click", function () {
             selected_insurance_id = this.getAttribute('id');
-            // fetch(`/api/selected_insurance/${selected_insurance_id}`);
+            fetch(`/api/selected_insurance/${selected_insurance_id}`);
         }, false);
 
         td.appendChild(document.createTextNode(text));
@@ -45,5 +45,5 @@ async function create_table() {
 }
 
 async function change_scene() {
-    document.location.href = '../index.html'
+    document.location.href = '/html/check.html'
 }

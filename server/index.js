@@ -17,6 +17,9 @@ const pool = new Pool({
 let changed_insurance;
 let insurance;
 let activ_user;
+let user;
+let changed_packages;
+let packages;
 
 let selected_insurance;
 
@@ -70,7 +73,7 @@ app.get('/api/changed_insurance', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            changed_insurance = res.rows
+            changed_insurance = res.rows;
             response.json({
                 body: changed_insurance
             });
@@ -87,7 +90,6 @@ app.get('/api/insurance/:id', (request, response) => {
             console.error(err);
         } else {
             insurance = res.rows[0]
-            console.log(insurance);
 
             response.json({
                 body: insurance
@@ -99,5 +101,60 @@ app.get('/api/insurance/:id', (request, response) => {
 //vracia poistku podla jej id
 app.get('/api/selected_insurance/:id', (request, response) => {
     selected_insurance_id = request.params.id;
-    console.log(selected_insurance_id);
+});
+
+//vracia vsetky zmenene baliky
+app.get('/api/changed_packages', (request, response) => {
+    console.log(selected_insurance_id)
+    let query = `select * from changed_insurance_packages where changed_insurance_id = ${selected_insurance_id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            changed_packages = res.rows;
+            response.json({
+                body: changed_packages
+            });
+        }
+    });
+});
+
+//vracia baliky, ktore su zahrnute v zmenenych balikoch
+app.get('/api/package/:id', (request, response) => {
+    let query = `select * from product_packages where id = ${request.params.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            packages = res.rows[0];
+            response.json({
+                body: packages
+            });
+        }
+    });
+});
+
+//vracia id zmenenej poistky
+app.get('/api/selected_insurance', (request, response) => {
+    response.json({
+        body: selected_insurance_id
+    });
+});
+
+//vracia baliky, ktore su zahrnute v zmenenych balikoch
+app.get('/api/user_insurance/:id', (request, response) => {
+    let query = `select * from users where id = ${request.params.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            user = res.rows[0];
+            response.json({
+                body: user
+            });
+        }
+    });
 });
