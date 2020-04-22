@@ -18,6 +18,8 @@ let changed_insurance;
 let insurance;
 let activ_user;
 
+let selected_insurance;
+
 //prihladenie pouzivatela
 app.post('/api/login', (request, response) => {
     const {email, password} = request.body;
@@ -92,4 +94,10 @@ app.get('/api/insurance/:id', (request, response) => {
             })
         }
     });
+});
+
+//vracia poistku podla jej id
+app.get('/api/selected_insurance/:id', (request, response) => {
+    selected_insurance_id = request.params.id;
+    console.log(selected_insurance_id);
 });
