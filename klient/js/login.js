@@ -1,4 +1,3 @@
-
 async function login() {
     let email = document.getElementById('email').value;
     let password = document.getElementById('password').value;   //treba zahashovat
@@ -15,7 +14,11 @@ async function login() {
     const response = await fetch('/api/login', options)
     const json = await response.json();
     
+    // treba rozlisit userov
     if(json.status == 'success') {
-        document.location.href = '/html/jano.html'
+        activ_user = json.body;
+        console.log(activ_user);
+        changed_insurances = json.insurances;
+        document.location.href = '/html/employee.html'
     }
 }

@@ -1,5 +1,5 @@
 const {Pool, Client} = require('pg'); //databaza
-
+const async = require('async');
 const express = require('express'); 
 const app = express();
 app.listen(3000, () => console.log('server listening at port 3000'));
@@ -10,9 +10,13 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'pis',
-    password: 'vava2020',
+    password: 'mamut9191',
     port: 5432,
 })
+
+let changed_insurance;
+let insurance;
+let activ_user;
 
 //prihladenie pouzivatela
 app.post('/api/login', (request, response) => {
@@ -25,11 +29,18 @@ app.post('/api/login', (request, response) => {
             console.error(err);
         } else {
             console.log(res.rows[0]);
+
             if(res.rows[0]) {
+                activ_user = res.rows[0];
+                // skontroluj ci sa jedna o zamestnanca
+                if(res.rows[0].user_type == 'zamestnanec'){
+                    console.log(res.rows[0].user_type);
+                }
                 response.json({
                     status: 'success',
-                    body: res.rows[0]
-                });
+                    body: res.rows[0],
+                    insurances: changed_insurance
+                });    
 
             } else {
                 response.json({
@@ -39,5 +50,46 @@ app.post('/api/login', (request, response) => {
             }
         }
     }); 
+});
 
+//vracia aktualne prihlaseneho pouzivatela
+app.get('/api/user', (request, response) => {
+    console.log(activ_user);
+    response.json({
+        body: activ_user
+    });
+});
+
+//vracia vsetky zmenene poistky
+app.get('/api/changed_insurance', (request, response) => {
+    let query = 'select * from changed_insurance where state = \'neskontrolovana\'';
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            changed_insurance = res.rows
+            response.json({
+                body: changed_insurance
+            });
+        }
+    });
+});
+
+//vracia poistku podla jej id
+app.get('/api/insurance/:id', (request, response) => {
+    const query = `select * from insurance where id = ${request.params.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            insurance = res.rows[0]
+            console.log(insurance);
+
+            response.json({
+                body: insurance
+            })
+        }
+    });
 });
