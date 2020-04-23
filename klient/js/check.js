@@ -20,7 +20,6 @@ async function get_user() {
 }
 
 async function load_user() {
-    console.log("tu som");
     await get_insurance();
     await get_user();
     
@@ -76,6 +75,16 @@ async function load_packages() {
 async function accept() {
     let message = '';
     let state = 'prijata';
+    let id = changed_packages[0].changed_insurance_id;
+
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id}) //data odosielane v requeste
+    };
+    await fetch('/api/remove_changed_packages', options);
 
     set_msg_state(message, state);
     notify(user, message, state, true);
