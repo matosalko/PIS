@@ -1,6 +1,7 @@
 let changed_insurances;
 let changed_insurance_id;
 let insurances = [];
+let cars;
 
 //ziska vsetky zmenenych poistiek
 async function get_changed_insurances() {
@@ -38,14 +39,22 @@ async function create_table() {
     for(item of insurances) {
         let tbl = document.getElementById("ins_table");
         let tr = document.createElement("tr");
-        let text = `Cislo zmenenej poistky ${item.insurance_number}`;
-        let td = document.createElement("td");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
 
-        td.setAttribute('id', `${item.change_ins_id} ${item.id}`);
-        td.setAttribute('onclick', "myFunction(this)")
+        let text1 = `${item.change_ins_id}`;
+        let text2 = `${item.insurance_number}`;
+        
 
-        td.appendChild(document.createTextNode(text));
-        tr.appendChild(td);
+        td2.setAttribute('id', `${item.change_ins_id} ${item.id}`);
+        td2.setAttribute('onclick', "myFunction(this)")
+
+
+        td1.appendChild(document.createTextNode(text1));
+        td2.appendChild(document.createTextNode(text2));
+        
+        tr.appendChild(td1);
+        tr.appendChild(td2);
         tbl.appendChild(tr);
     }
 }

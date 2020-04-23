@@ -74,6 +74,8 @@ async function load_packages() {
 
 async function accept() {
     // document.location.href = '/html/check.html'
+    let message = '';
+    let state = 'prijata';
     console.log('stranka vo vystavbe');
 }
 
@@ -82,6 +84,6 @@ async function change() {
 }
 
 async function denie() {
-    // document.location.href = '/html/check.html'
-    console.log('stranka vo vystavbe');
+    document.location.href = '/html/denie.html'
+    // console.log('stranka vo vystavbe');
 }

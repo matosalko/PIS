@@ -11,25 +11,13 @@
             <script>
                 load_user();
             </script>
-
+            <p>Zmena poistky bola zamietnuta</p>
             <p id="name"></p>
             <p id="insurance"></p>
+            <p>Odovodnenie zamietnutia</p>
 
-            <table id='table'>
-                <tr>
-                    <td>Nazov</td>
-                    <td>Popis</td>
-                </tr>
-            </table>
-
-            <script>
-                load_packages();
-            </script>
-
-            <label>Odovodnenie:</label><br>
-            <textarea id="message"></textarea> 
-
-            <button type="button" onclick="send_change()">Odoslat</button>
+            <textarea id="message"></textarea>
+            <button type="button" onclick="send_denie()">Odoslat</button>
         </div>
     </body>
 </html>

@@ -65,7 +65,7 @@ async function load_packages() {
     }
 }
 
-async function send() {
+async function send_change() {
     let message = document.getElementById("message").value;
     let state = 'upravena';
     console.log(document.getElementById("message").value);
@@ -79,9 +79,6 @@ async function send() {
     const response = await fetch('/api/get_changed_insurance');
     const json = await response.json();
     changed_insurance = json.body;
-
-    console.log("edit changes ");
-    console.log(changed_insurance);
 
     id = changed_insurance.id
 
@@ -115,4 +112,10 @@ async function send() {
 
     await fetch('/api/update_change_insurance', options);
     document.location.href = '../index.html';
+}
+
+async function send_denie() {
+    let message = document.getElementById("message").value;
+    let state = 'odmietnuta';
+    console.log("odmietnute odoslane");
 }
