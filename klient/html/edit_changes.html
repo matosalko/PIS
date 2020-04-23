@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PIS projekt</title>
-        <script src="../js/check.js"></script>
+        <script src="../js/edit_changes.js"></script>
     </head>
     <body>
         <div>
@@ -15,9 +15,9 @@
             <p id="name"></p>
             <p id="insurance"></p>
 
-            <table id='ins_table'>
+            <table id='table'>
                 <tr>
-                    <td>Nazov balika</td>
+                    <td>Nazov</td>
                     <td>Popis</td>
                 </tr>
             </table>
@@ -26,9 +26,10 @@
                 load_packages();
             </script>
 
-            <button type="button" onclick="accept()">Prijat</button> 
-            <button type="button" onclick="change()">Upravit</button> 
-            <button type="button" onclick="denie()">Odmietnut</button> 
+            <label>Odovodnenie:</label><br>
+            <textarea id="message"></textarea> 
+
+            <button type="button" onclick="send()">Odoslat</button>
         </div>
     </body>
 </html>

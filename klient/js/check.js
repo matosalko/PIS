@@ -1,13 +1,44 @@
 let changed_packages;
 let packages = []
 let user;
-let selected_insurance_id;
 let insurance;
 
+
+//ziska konkretnu originalnu poistku
+async function get_insurance() {
+    let response = await fetch(`/api/check_insurance`);
+    let json = await response.json();
+    insurance = json.body;
+    console.log(insurance);
+}
+
+//ziska konkretneho pouzivatela, koho sa poistka tyka
+async function get_user() {
+    const response = await fetch(`/api/user_insurance/${insurance.user_id}`);
+    const json = await response.json();
+    user = json.body;
+    console.log(user);
+}
+
+async function load_user() {
+    console.log("tu som");
+    await get_insurance();
+    await get_user();
+
+    document.getElementById("name").innerHTML = `Meno poistenca: ${user.name} ${user.surname}`;
+    document.getElementById("insurance").innerHTML = `Cislo poistky: ${insurance.insurance_number}`;
+}
+
+
+
+
+
 async function get_changed_packages() {
-    const response = await fetch('/api/changed_packages');
+    console.log("vytiahnutie zmenenych balikov");
+    const response = await fetch('/api/all_changed_packages');
     const json = await response.json();
     changed_packages = json.body;
+    console.log(changed_packages);
 }
 
 async function get_packages() {
@@ -17,30 +48,7 @@ async function get_packages() {
         const json = await response.json();
         packages.push(json.body);
     }
-}
-
-async function get_insurance() {
-    let response = await fetch('/api/selected_insurance');
-    let json = await response.json();
-    selected_insurance_id = json.body;
-
-    response = await fetch(`/api/insurance/${selected_insurance_id}`);
-    json = await response.json();
-    insurance = json.body;
-}
-
-async function get_user() {
-    const response = await fetch(`/api/user_insurance/${insurance.user_id}`);
-    const json = await response.json();
-    user = json.body;
-}
-
-async function load_user() {
-    await get_insurance();
-    await get_user();
-
-    document.getElementById("name").innerHTML = `Meno poistenca: ${user.name} ${user.surname}`;
-    document.getElementById("insurance").innerHTML = `Cislo poistky: ${insurance.insurance_number}`;
+    console.log(packages);
 }
 
 async function load_packages() {
@@ -70,7 +78,7 @@ async function accept() {
 }
 
 async function change() {
-    document.location.href = '/html/change.html'
+    document.location.href = '/html/edit_changes.html'
 }
 
 async function denie() {

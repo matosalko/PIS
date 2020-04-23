@@ -15,15 +15,18 @@ const pool = new Pool({
 })
 
 let changed_insurance;
+var changed_insurance_id;
+
 let insurance;
+var insurance_id;
+
 let activ_user;
 let user;
+
 let changed_packages;
 let packages;
 
-let selected_insurance;
-
-//prihladenie pouzivatela
+//prihlasenie pouzivatela
 app.post('/api/login', (request, response) => {
     const {email, password} = request.body;
     const query = `select * from users where email = $1 and password = $2`;
@@ -44,7 +47,6 @@ app.post('/api/login', (request, response) => {
                 response.json({
                     status: 'success',
                     body: res.rows[0],
-                    insurances: changed_insurance
                 });    
 
             } else {
@@ -57,16 +59,8 @@ app.post('/api/login', (request, response) => {
     }); 
 });
 
-//vracia aktualne prihlaseneho pouzivatela
-app.get('/api/user', (request, response) => {
-    console.log(activ_user);
-    response.json({
-        body: activ_user
-    });
-});
-
-//vracia vsetky zmenene poistky
-app.get('/api/changed_insurance', (request, response) => {
+//vrati vsetky zmenene poistky so statusom neskontolovana
+app.get('/api/all_changed_insurances', (request, response) => {
     let query = 'select * from changed_insurance where state = \'neskontrolovana\'';
 
     pool.query(query, (err, res) => {
@@ -81,7 +75,7 @@ app.get('/api/changed_insurance', (request, response) => {
     });
 });
 
-//vracia poistku podla jej id
+//vrati originalnu poistku podla jej id
 app.get('/api/insurance/:id', (request, response) => {
     const query = `select * from insurance where id = ${request.params.id}`;
 
@@ -98,15 +92,28 @@ app.get('/api/insurance/:id', (request, response) => {
     });
 });
 
-//vracia poistku podla jej id
-app.get('/api/selected_insurance/:id', (request, response) => {
-    selected_insurance_id = request.params.id;
+//vrati vybratu originalnu poistku podla jej ulozeneho id
+app.get('/api/check_insurance', (request, response) => {
+    const query = `select * from insurance where id = ${insurance_id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            insurance = res.rows[0]
+
+            response.json({
+                body: insurance
+            })
+        }
+    });
 });
 
-//vracia vsetky zmenene baliky
-app.get('/api/changed_packages', (request, response) => {
-    console.log(selected_insurance_id)
-    let query = `select * from changed_insurance_packages where changed_insurance_id = ${selected_insurance_id}`;
+//vracia vsetky baliky zahrnute v zmenenej zmluve
+app.get('/api/all_changed_packages', (request, response) => {
+    console.log("zmenene baliky");
+    console.log("co to " + changed_insurance_id);
+    let query = `select * from changed_insurance_packages where changed_insurance_id = ${changed_insurance_id}`;
 
     pool.query(query, (err, res) => {
         if(err) {
@@ -120,7 +127,7 @@ app.get('/api/changed_packages', (request, response) => {
     });
 });
 
-//vracia baliky, ktore su zahrnute v zmenenych balikoch
+//vracia len tie baliky, ktore su zahrnute v zmenenych balikoch 
 app.get('/api/package/:id', (request, response) => {
     let query = `select * from product_packages where id = ${request.params.id}`;
 
@@ -136,14 +143,23 @@ app.get('/api/package/:id', (request, response) => {
     });
 });
 
-//vracia id zmenenej poistky
-app.get('/api/selected_insurance', (request, response) => {
-    response.json({
-        body: selected_insurance_id
+//vracia vsetky baliky
+app.get('/api/package_all', (request, response) => {
+    let query = `select * from product_packages`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            packages = res.rows;
+            response.json({
+                body: packages
+            });
+        }
     });
 });
 
-//vracia baliky, ktore su zahrnute v zmenenych balikoch
+//vracia pouzivatela
 app.get('/api/user_insurance/:id', (request, response) => {
     let query = `select * from users where id = ${request.params.id}`;
 
@@ -156,5 +172,59 @@ app.get('/api/user_insurance/:id', (request, response) => {
                 body: user
             });
         }
+    });
+});
+
+
+
+
+//------------------ulozenie ideciek poistiek
+//ulozi id originalnej poistky
+app.get('/api/set_insurance/:id', (request, response) => {
+    insurance_id = request.params.id;
+    console.log("som tu 1 " + insurance_id);
+    response.json({
+        body: null
+    });
+});
+
+//ulozi id zmenenej poistky
+app.get('/api/set_changed_insurance/:id', (request, response) => {
+    changed_insurance_id = request.params.id;
+    console.log("som tu 2 " + changed_insurance_id);
+    response.json({
+        body: null
+    });
+});
+
+
+
+//-----------vracaju nacitane hodnoty------------------------
+//vracia id zmenenej poistky
+app.get('/api/get_insurance_id', (request, response) => {
+    response.json({
+        body: insurance_id
+    });
+});
+
+//vracia usera
+app.get('/api/get_user', (request, response) => {
+    response.json({
+        body: user
+    });
+});
+
+//vracia poistku
+app.get('/api/get_insurance', (request, response) => {
+    response.json({
+        body: insurance
+    });
+});
+
+//vracia aktualne prihlaseneho pouzivatela
+app.get('/api/user', (request, response) => {
+    console.log(activ_user);
+    response.json({
+        body: activ_user
     });
 });
