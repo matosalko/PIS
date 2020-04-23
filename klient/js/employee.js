@@ -1,6 +1,6 @@
 let changed_insurances;
+let changed_insurance_id;
 let insurances = [];
-let insurance_id;
 
 //ziska vsetky zmenenych poistiek
 async function get_changed_insurances() {
@@ -25,11 +25,10 @@ async function get_insurances() {
 
 async function myFunction(x) {
     let ids = x.id.split(" ");
-    console.log('ID zmenenych poistiek ' + ids[0] + " " + ids[1]);
 
-    fetch(`/api/set_insurance/${ids[1]}`);
-    fetch(`/api/set_changed_insurance/${ids[0]}`);
-    console.log('hotovo');
+    await fetch(`/api/set_insurance/${ids[1]}`);
+    await fetch(`/api/set_changed_insurance/${ids[0]}`);
+    changed_insurance_id = ids[0];
 }
 
 async function create_table() {
@@ -52,5 +51,15 @@ async function create_table() {
 }
 
 async function change_scene() {
-    document.location.href = '/html/check.html'
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({changed_insurance_id}) //data odosielane v requeste
+    };
+
+    await fetch('/api/set_changed_insurance/', options);
+    console.log("button");
+    document.location.href = '/html/check.html';
 }

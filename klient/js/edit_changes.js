@@ -66,6 +66,8 @@ async function load_packages() {
 }
 
 async function send() {
+    let message = document.getElementById("message").value;
+    let state = 'upravena';
     console.log(document.getElementById("message").value);
 
     for(item of packages) {
@@ -74,10 +76,43 @@ async function send() {
         }
     }
 
-    // const response = await fetch(`/api/check_insurance`);
-    // const json = await response.json();
-    // changed_insurance = json.body;
+    const response = await fetch('/api/get_changed_insurance');
+    const json = await response.json();
+    changed_insurance = json.body;
 
-    console.log(new_packages);
+    console.log("edit changes ");
+    console.log(changed_insurance);
 
+    id = changed_insurance.id
+
+    let options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id}) //data odosielane v requeste
+    };
+    await fetch('/api/remove_changed_packages', options);
+
+    for(item of new_packages){
+        options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({item, id}) //data odosielane v requeste
+        };
+        await fetch('/api/insert_changed_packages', options);
+    }
+
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({message, state, id}) //data odosielane v requeste
+    };
+
+    await fetch('/api/update_change_insurance', options);
+    document.location.href = '../index.html';
 }

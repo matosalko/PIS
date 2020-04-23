@@ -175,7 +175,77 @@ app.get('/api/user_insurance/:id', (request, response) => {
     });
 });
 
+//vrati vybratu zmenenu poistku a ULOZI JU
+app.post('/api/set_changed_insurance/', (request, response) => {
+    let data = request.body;
+    const query = `select * from changed_insurance where id = ${data.changed_insurance_id}`;
 
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            changed_insurance = res.rows[0];
+            console.log(changed_insurance);
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
+
+
+//vymaze baliky zmenenej poistky
+app.delete('/api/remove_changed_packages/', (request, response) => {
+    let data = request.body;
+    const query = `delete from changed_insurance_packages where changed_insurance_id = ${data.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
+
+//vymaze baliky zmenenej poistky
+app.post('/api/insert_changed_packages/', (request, response) => {
+    let data = request.body;
+    const query = `INSERT INTO changed_insurance_packages (changed_insurance_id, package_id) VALUES (${data.id}, ${data.item});`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
+
+//upravi zmenenu poistku a nastavi spravu a stav
+app.post('/api/update_change_insurance/', (request, response) => {
+    let data = request.body;
+    console.log('UPDATE');
+    console.log(data);
+    console.log(data.message);
+    console.log(data.state);
+    console.log(data.id);
+    const query = `UPDATE changed_insurance SET message = \'${data.message}\', state = \'${data.state}\' WHERE id = ${data.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
 
 
 //------------------ulozenie ideciek poistiek
@@ -218,6 +288,13 @@ app.get('/api/get_user', (request, response) => {
 app.get('/api/get_insurance', (request, response) => {
     response.json({
         body: insurance
+    });
+});
+
+//vracia poistku
+app.get('/api/get_changed_insurance', (request, response) => {
+    response.json({
+        body: changed_insurance
     });
 });
 
