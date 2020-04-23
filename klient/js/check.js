@@ -3,7 +3,6 @@ let packages = []
 let user;
 let insurance;
 
-
 //ziska konkretnu originalnu poistku
 async function get_insurance() {
     let response = await fetch(`/api/check_insurance`);
@@ -24,7 +23,7 @@ async function load_user() {
     console.log("tu som");
     await get_insurance();
     await get_user();
-
+    
     document.getElementById("name").innerHTML = `Meno poistenca: ${user.name} ${user.surname}`;
     document.getElementById("insurance").innerHTML = `Cislo poistky: ${insurance.insurance_number}`;
 }
@@ -72,11 +71,15 @@ async function load_packages() {
     }
 }
 
+
+
 async function accept() {
-    // document.location.href = '/html/check.html'
     let message = '';
     let state = 'prijata';
-    console.log('stranka vo vystavbe');
+
+    set_msg_state(message, state);
+    notify(user, message, state, true);
+    notify(user, message, state);
 }
 
 async function change() {
@@ -85,5 +88,4 @@ async function change() {
 
 async function denie() {
     document.location.href = '/html/denie.html'
-    // console.log('stranka vo vystavbe');
 }

@@ -15,10 +15,10 @@ const pool = new Pool({
 })
 
 let changed_insurance;
-var changed_insurance_id;
+let changed_insurance_id;
 
 let insurance;
-var insurance_id;
+let insurance_id;
 
 let activ_user;
 let user;
@@ -234,7 +234,7 @@ app.post('/api/update_change_insurance/', (request, response) => {
     console.log(data.message);
     console.log(data.state);
     console.log(data.id);
-    const query = `UPDATE changed_insurance SET message = \'${data.message}\', state = \'${data.state}\' WHERE id = ${data.id}`;
+    const query = `UPDATE changed_insurance SET message = \'${data.message}\', state = \'${data.state}\' WHERE id = ${changed_insurance_id}`;
 
     pool.query(query, (err, res) => {
         if(err) {
@@ -266,6 +266,22 @@ app.get('/api/set_changed_insurance/:id', (request, response) => {
         body: null
     });
 });
+
+// //upravi zmenenu poistku a nastavi spravu a stav
+// app.post('/api/set_message_state/', (request, response) => {
+//     let data = request.body;
+    
+//     message = data.message;
+//     state = data.state;
+
+//     console.log('UPDATE');
+//     console.log(message);
+//     console.log(state);
+
+//     response.json({
+//         body: "ok"
+//     })
+// });
 
 
 

@@ -102,20 +102,14 @@ async function send_change() {
         await fetch('/api/insert_changed_packages', options);
     }
 
-    options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({message, state, id}) //data odosielane v requeste
-    };
-
-    await fetch('/api/update_change_insurance', options);
-    document.location.href = '../index.html';
+    set_msg_state(message, state);
+    notify(user, message, state);
 }
 
 async function send_denie() {
     let message = document.getElementById("message").value;
     let state = 'odmietnuta';
-    console.log("odmietnute odoslane");
+
+    set_msg_state(message, state);
+    notify(user, message, state);
 }
