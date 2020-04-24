@@ -39,7 +39,7 @@ async function get_vehicle() {
 
 //zisti, ci ma poistenec pravo na vernostnu zlavu
 function chceck_for_discount() {
-    //tu sa zisti ci ma narok na zlavu a ak ano tak sa prida do changed_insurance zlava v percentach
+    //TODO
 }
 
 function add_info_to_row(id, text) {
@@ -54,10 +54,6 @@ function add_row(name, text) {
     let tr = document.createElement("tr");
     let td1 = document.createElement("td");
     let td2 = document.createElement("td");
-    
-    // let name = `${item.name}`;
-    // let price = item.price;
-    // total_price += price;
 
     td1.appendChild(document.createTextNode(name));
     td2.appendChild(document.createTextNode(text));
@@ -72,6 +68,8 @@ async function create_proposal() {
     await get_insurance();
     await get_packages();
     await get_vehicle();
+
+    chceck_for_discount();
 
     //pridanie riadkov s balikmi v upravenej zmluve
     for(item of packages) {
@@ -134,5 +132,8 @@ async function approve() {
 function refuse() {
     localStorage.removeItem('changed_insurance_packages');
 
+    //TODO: treba sa spytat uzivatela ci chce dalej upravovat zmluvu alebo nie
+
+    //ak chce tak toto
     document.location.href = 'select_packages.html';
 }
