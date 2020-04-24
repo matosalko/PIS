@@ -10,22 +10,11 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'pis',
-    password: 'vava2020',
+    password: 'mamut9191',
     port: 5432,
 })
 
-let changed_insurance;
-let changed_insurance_id;
-
-let insurance;
-let insurance_id;
-
-let activ_user;
-let user;
-
-let changed_packages;
-let packages;
-
+//---------------POUZIVATEL---------------------------
 //prihlasenie pouzivatela
 app.post('/api/login', (request, response) => {
     const {email, password} = request.body;
@@ -74,6 +63,7 @@ app.get('/api/user/:id', (request, response) => {
     });
 });
 
+//----------------------ZMENENE POISTKY---------------------
 //vrati vsetky zmenene poistky so statusom neskontolovana
 app.get('/api/all_changed_insurances', (request, response) => {
     let query = 'select * from changed_insurance where state = \'neskontrolovana\'';
@@ -82,14 +72,30 @@ app.get('/api/all_changed_insurances', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            changed_insurance = res.rows;
             response.json({
-                body: changed_insurance
+                body: res.rows
             });
         }
     });
 });
 
+//upravi zmenenu poistku a nastavi spravu a stav
+app.post('/api/update_change_insurance/', (request, response) => {
+    let data = request.body;
+    const query = `UPDATE changed_insurance SET message = \'${data.message}\', state = \'${data.state}\' WHERE id = ${data.changed_insurance_id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
+
+//--------------------POISTKY---------------------------------
 //vrati vsetky poistky patriace prihlasenemu poistencovi
 app.get('/api/insurance/user/:id', (request, response) => {
     const query = `select * from insurance where user_id = ${request.params.id}`
@@ -98,10 +104,8 @@ app.get('/api/insurance/user/:id', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            insurance = res.rows
-
             response.json({
-                body: insurance
+                body: res.rows
             });
         }
     });
@@ -115,35 +119,17 @@ app.get('/api/insurance/:id', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            insurance = res.rows[0]
-
             response.json({
-                body: insurance
+                body: res.rows[0]
             });
         }
     });
 });
 
-//vrati vybratu originalnu poistku podla jej ulozeneho id
-app.get('/api/check_insurance', (request, response) => {
-    const query = `select * from insurance where id = ${insurance_id}`;
-
-    pool.query(query, (err, res) => {
-        if(err) {
-            console.error(err);
-        } else {
-            insurance = res.rows[0]
-
-            response.json({
-                body: insurance
-            })
-        }
-    });
-});
-
-//vracia vsetky baliky zahrnute v original zmluve
-app.get('/api/packages/:insurance_id', (request, response) => {
-    const query = `select * from insurance_packages where insurance_id = ${request.params.insurance_id}`;
+//----------------------------ZMENENE BALIKY-----------------------------
+//vracia vsetky baliky zahrnute v zmenenej zmluve
+app.get('/api/all_changed_packages/:id', (request, response) => {
+    let query = `select * from changed_insurance_packages where changed_insurance_id = ${request.params.id}`;
 
     pool.query(query, (err, res) => {
         if(err) {
@@ -156,24 +142,39 @@ app.get('/api/packages/:insurance_id', (request, response) => {
     });
 });
 
-//vracia vsetky baliky zahrnute v zmenenej zmluve
-app.get('/api/all_changed_packages', (request, response) => {
-    console.log("zmenene baliky");
-    console.log("co to " + changed_insurance_id);
-    let query = `select * from changed_insurance_packages where changed_insurance_id = ${changed_insurance_id}`;
+//vymaze baliky zmenenej poistky
+app.delete('/api/remove_changed_packages/', (request, response) => {
+    let data = request.body;
+    const query = `delete from changed_insurance_packages where changed_insurance_id = ${data.changed_insurance_id}`;
 
     pool.query(query, (err, res) => {
         if(err) {
             console.error(err);
         } else {
-            changed_packages = res.rows;
             response.json({
-                body: changed_packages
-            });
+                body: "ok"
+            })
         }
     });
 });
 
+//vlozi baliky zmenenej poistky
+app.post('/api/insert_changed_packages/', (request, response) => {
+    let data = request.body;
+    const query = `INSERT INTO changed_insurance_packages (changed_insurance_id, package_id) VALUES (${data.changed_insurance_id}, ${data.item});`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
+
+//----------------------BALIKY-----------------------------
 //vracia len tie baliky, ktore su zahrnute v zmenenych balikoch 
 app.get('/api/package/:id', (request, response) => {
     let query = `select * from product_packages where id = ${request.params.id}`;
@@ -182,9 +183,8 @@ app.get('/api/package/:id', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            packages = res.rows[0];
             response.json({
-                body: packages
+                body: res.rows[0]
             });
         }
     });
@@ -198,166 +198,9 @@ app.get('/api/package_all', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            packages = res.rows;
             response.json({
-                body: packages
+                body: res.rows
             });
         }
     });
 });
-
-//vracia pouzivatela
-app.get('/api/user_insurance/:id', (request, response) => {
-    let query = `select * from users where id = ${request.params.id}`;
-
-    pool.query(query, (err, res) => {
-        if(err) {
-            console.error(err);
-        } else {
-            user = res.rows[0];
-            response.json({
-                body: user
-            });
-        }
-    });
-});
-
-//vrati vybratu zmenenu poistku a ULOZI JU
-app.post('/api/set_changed_insurance/', (request, response) => {
-    let data = request.body;
-    const query = `select * from changed_insurance where id = ${data.changed_insurance_id}`;
-
-    pool.query(query, (err, res) => {
-        if(err) {
-            console.error(err);
-        } else {
-            changed_insurance = res.rows[0];
-            console.log(changed_insurance);
-            response.json({
-                body: "ok"
-            })
-        }
-    });
-});
-
-
-//vymaze baliky zmenenej poistky
-app.delete('/api/remove_changed_packages/', (request, response) => {
-    let data = request.body;
-    const query = `delete from changed_insurance_packages where changed_insurance_id = ${data.id}`;
-
-    pool.query(query, (err, res) => {
-        if(err) {
-            console.error(err);
-        } else {
-            response.json({
-                body: "ok"
-            })
-        }
-    });
-});
-
-//vymaze baliky zmenenej poistky
-app.post('/api/insert_changed_packages/', (request, response) => {
-    let data = request.body;
-    const query = `INSERT INTO changed_insurance_packages (changed_insurance_id, package_id) VALUES (${data.id}, ${data.item});`;
-
-    pool.query(query, (err, res) => {
-        if(err) {
-            console.error(err);
-        } else {
-            response.json({
-                body: "ok"
-            })
-        }
-    });
-});
-
-//upravi zmenenu poistku a nastavi spravu a stav
-app.post('/api/update_change_insurance/', (request, response) => {
-    let data = request.body;
-    console.log('UPDATE');
-    console.log(data);
-    console.log(data.message);
-    console.log(data.state);
-    console.log(data.id);
-    const query = `UPDATE changed_insurance SET message = \'${data.message}\', state = \'${data.state}\' WHERE id = ${changed_insurance_id}`;
-
-    pool.query(query, (err, res) => {
-        if(err) {
-            console.error(err);
-        } else {
-            response.json({
-                body: "ok"
-            })
-        }
-    });
-});
-
-
-//------------------ulozenie ideciek poistiek
-//ulozi id originalnej poistky
-app.get('/api/set_insurance/:id', (request, response) => {
-    insurance_id = request.params.id;
-    console.log("som tu 1 " + insurance_id);
-    response.json({
-        body: null
-    });
-});
-
-//ulozi id zmenenej poistky
-app.get('/api/set_changed_insurance/:id', (request, response) => {
-    changed_insurance_id = request.params.id;
-    console.log("som tu 2 " + changed_insurance_id);
-    response.json({
-        body: null
-    });
-});
-
-// //upravi zmenenu poistku a nastavi spravu a stav
-// app.post('/api/set_message_state/', (request, response) => {
-//     let data = request.body;
-    
-//     message = data.message;
-//     state = data.state;
-
-//     console.log('UPDATE');
-//     console.log(message);
-//     console.log(state);
-
-//     response.json({
-//         body: "ok"
-//     })
-// });
-
-
-
-//-----------vracaju nacitane hodnoty------------------------
-//vracia id zmenenej poistky
-app.get('/api/get_insurance_id', (request, response) => {
-    response.json({
-        body: insurance_id
-    });
-});
-
-//vracia usera
-app.get('/api/get_user', (request, response) => {
-    response.json({
-        body: user
-    });
-});
-
-//vracia poistku
-app.get('/api/get_insurance', (request, response) => {
-    response.json({
-        body: insurance
-    });
-});
-
-//vracia poistku
-app.get('/api/get_changed_insurance', (request, response) => {
-    response.json({
-        body: changed_insurance
-    });
-});
-

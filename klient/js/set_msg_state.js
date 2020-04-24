@@ -1,44 +1,44 @@
 async function set_msg_state(message, state) {
-    console.log("WSDL")
+    const changed_insurance_id = localStorage.getItem('changed_insurance_id');
 
     let options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({message, state}) //data odosielane v requeste
+        body: JSON.stringify({message, state, changed_insurance_id}) //data odosielane v requeste
     };
 
-    await fetch('/api/update_change_insurance', options);
+    await fetch('/api/update_change_insurance/', options);
 }
 
 function notify(user, message, state, send_acc_ins) {
-    let team_id = "062";
-    let password = "88JMQ1";
+    let team_id = '062';
+    let password = '88JMQ1';
     let address = user.address;
     let phone = user.phone;
     let email = user.email;
-    let subject = "Notifikacia";
+    let subject = 'Notifikacia';
     let msg;
     let url;
 
-    if(state == "prijata") {
+    if(state == 'prijata') {
         msg = `Vasa zmena bola ${state}.`;
     } else {
         msg = `Vasa zmena bola ${state} z nasledujucich dovodov. ${message}`;
     }
 
     function createCORSRequest(method, url) {
-        var xhr = new XMLHttpRequest();
-        if ("withCredentials" in xhr) {
+        let xhr = new XMLHttpRequest();
+        if ('withCredentials' in xhr) {
             xhr.open(method, url, false);
-        } else if (typeof XDomainRequest != "undefined") {
+        } else if (typeof XDomainRequest != 'undefined') {
             alert
             xhr = new XDomainRequest();
             xhr.open(method, url);
         } else {
-            console.log("CORS not supported");
-            alert("CORS not supported");
+            console.log('CORS not supported');
+            alert('CORS not supported');
             xhr = null;
         }
         return xhr;
@@ -46,11 +46,11 @@ function notify(user, message, state, send_acc_ins) {
 
     if(user.notification == 'mail' || send_acc_ins) {
         if(send_acc_ins) {
-            subject = "Poistka";
-            msg = "Toto je vasa nova poistna zmluva.";
+            subject = 'Poistka';
+            msg = 'Toto je vasa nova poistna zmluva.';
         }
 
-        url = "http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/Mail"
+        url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/Mail'
         var xml = 
         '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/notificationservices/mail/types">' +
         '<soapenv:Header/>'+
@@ -67,7 +67,7 @@ function notify(user, message, state, send_acc_ins) {
     }
 
     if(user.notification == 'email') {
-        url = "http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/Email"
+        url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/Email'
         var xml = 
         '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/notificationservices/email/types">'+
         '<soapenv:Header/>'+
@@ -84,7 +84,7 @@ function notify(user, message, state, send_acc_ins) {
     }
 
     if(user.notification == 'sms') {
-        url = "http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/SMS"
+        url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/SMS'
         var xml = 
         '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/notificationservices/sms/types">'+
         '<soapenv:Header/>'+
@@ -101,11 +101,11 @@ function notify(user, message, state, send_acc_ins) {
     }
 
 
-    let xhr = createCORSRequest("POST", url);
+    let xhr = createCORSRequest('POST', url);
 
     console.log(xhr);
     if(!xhr){
-        console.log("XHR issue");
+        console.log('XHR issue');
         return;
     }
 

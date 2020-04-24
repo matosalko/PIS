@@ -1,27 +1,26 @@
 let packages;
-let new_packages = [];
-let user;
-let insurance_id;
 let insurance;
-let changed_insurance;
+let user;
+const changed_insurance_id = localStorage.getItem('changed_insurance_id');
+const insurance_id = localStorage.getItem('insurance_id');
+const user_id = localStorage.getItem('user_id');
 
 async function get_insurance() {
-    let response = await fetch('/api/get_insurance_id');
+    let response = await fetch(`/api/insurance/${insurance_id}`);
     let json = await response.json();
-    insurance_id = json.body;
-
-
-    response = await fetch(`/api/get_insurance`);
-    json = await response.json();
     insurance = json.body;
 
+    console.log('Vybrata poistka');
     console.log(insurance);
 }
 
 async function get_user() {
-    const response = await fetch(`/api/get_user`);
+    const response = await fetch(`/api/user/${user_id}`);
     const json = await response.json();
     user = json.body;
+
+    console.log('Vybraty pouzivatel');
+    console.log(user);
 }
 
 async function load_user() {
@@ -33,9 +32,12 @@ async function load_user() {
 }
 
 async function get_packages() {
-    const response = await fetch(`/api/package_all`);
+    const response = await fetch('/api/package_all');
     const json = await response.json();
     packages = json.body;
+
+    console.log('Vsetky baliky');
+    console.log(packages);
 }
 
 async function load_packages() {
@@ -49,10 +51,8 @@ async function load_packages() {
         let label = document.createElement("label");
         let box = document.createElement("input");
 
-        label.setAttribute("for", `${item.name}`);
+        label.setAttribute('for', `${item.name}`);
         box.setAttribute('type', 'checkbox');
-        box.setAttribute('id', `${item.id}`);
-        box.setAttribute('name', `${item.name}`);
         box.setAttribute('id', `${item.id}`);
 
         label.appendChild(document.createTextNode(item.name));
@@ -65,10 +65,12 @@ async function load_packages() {
     }
 }
 
-async function send_change() {
+async function send_change() {;
     let message = document.getElementById("message").value;
     let state = 'upravena';
-    console.log(document.getElementById("message").value);
+    let new_packages = [];
+
+
 
     for(item of packages) {
         if (document.getElementById(`${item.id}`).checked) {
@@ -76,20 +78,14 @@ async function send_change() {
         }
     }
 
-    const response = await fetch('/api/get_changed_insurance');
-    const json = await response.json();
-    changed_insurance = json.body;
-
-    id = changed_insurance.id
-
     let options = {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({id}) //data odosielane v requeste
+        body: JSON.stringify({changed_insurance_id}) //data odosielane v requeste
     };
-    await fetch('/api/remove_changed_packages', options);
+    await fetch('/api/remove_changed_packages/', options);
 
     for(item of new_packages){
         options = {
@@ -97,18 +93,27 @@ async function send_change() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({item, id}) //data odosielane v requeste
+            body: JSON.stringify({item, changed_insurance_id}) //data odosielane v requeste
         };
-        await fetch('/api/insert_changed_packages', options);
+        await fetch('/api/insert_changed_packages/', options);
     }
 
     set_msg_state(message, state);
-    notify(user, message, state);
+    // notify(user, message, state);
 }
 
 async function send_denie() {
     let message = document.getElementById("message").value;
     let state = 'odmietnuta';
+
+    let options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({changed_insurance_id}) //data odosielane v requeste
+    };
+    await fetch('/api/remove_changed_packages/', options);
 
     set_msg_state(message, state);
     notify(user, message, state);
