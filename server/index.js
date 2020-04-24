@@ -141,6 +141,21 @@ app.get('/api/check_insurance', (request, response) => {
     });
 });
 
+//vracia vsetky baliky zahrnute v original zmluve
+app.get('/api/packages/:insurance_id', (request, response) => {
+    const query = `select * from insurance_packages where insurance_id = ${request.params.insurance_id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: res.rows
+            });
+        }
+    });
+});
+
 //vracia vsetky baliky zahrnute v zmenenej zmluve
 app.get('/api/all_changed_packages', (request, response) => {
     console.log("zmenene baliky");

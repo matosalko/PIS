@@ -35,5 +35,14 @@ function select_insurance(insurance_id) {
 }
 
 function change_scene() {
+    let changed_insurance = {
+        'insurance_id': selected_insurance.id,
+        'state': 'neskontrolovana',
+        'message': null,
+        'price': null,
+        'discount': null
+    };
+
+    localStorage.setItem('changed_insurance', JSON.stringify(changed_insurance));
     document.location.href = 'select_packages.html';
 }
