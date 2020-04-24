@@ -99,7 +99,7 @@ async function send_change() {;
     }
 
     set_msg_state(message, state);
-    // notify(user, message, state);
+    notify(user, message, state);
 }
 
 async function send_denie() {
