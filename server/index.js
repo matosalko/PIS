@@ -10,7 +10,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'pis',
-    password: 'mamut9191',
+    password: 'vava2020',
     port: 5432,
 })
 
@@ -59,6 +59,21 @@ app.post('/api/login', (request, response) => {
     }); 
 });
 
+//vracia pouzivatela na zaklade id
+app.get('/api/user/:id', (request, response) => {
+    const query = `select * from users where id = ${request.params.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: res.rows[0]
+            });
+        }
+    });
+});
+
 //vrati vsetky zmenene poistky so statusom neskontolovana
 app.get('/api/all_changed_insurances', (request, response) => {
     let query = 'select * from changed_insurance where state = \'neskontrolovana\'';
@@ -70,6 +85,23 @@ app.get('/api/all_changed_insurances', (request, response) => {
             changed_insurance = res.rows;
             response.json({
                 body: changed_insurance
+            });
+        }
+    });
+});
+
+//vrati vsetky poistky patriace prihlasenemu poistencovi
+app.get('/api/insurance/user/:id', (request, response) => {
+    const query = `select * from insurance where user_id = ${request.params.id}`
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            insurance = res.rows
+
+            response.json({
+                body: insurance
             });
         }
     });
@@ -87,7 +119,7 @@ app.get('/api/insurance/:id', (request, response) => {
 
             response.json({
                 body: insurance
-            })
+            });
         }
     });
 });
@@ -314,10 +346,3 @@ app.get('/api/get_changed_insurance', (request, response) => {
     });
 });
 
-//vracia aktualne prihlaseneho pouzivatela
-app.get('/api/user', (request, response) => {
-    console.log(activ_user);
-    response.json({
-        body: activ_user
-    });
-});
