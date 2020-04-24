@@ -78,15 +78,15 @@ async function accept() {
     let message = '';
     let state = 'prijata';
 
-    const options = {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({changed_insurance_id})
-    };
+    // const options = {
+    //     method: 'DELETE',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({changed_insurance_id})
+    // };
 
-    await fetch('/api/remove_changed_packages', options);
+    //await fetch('/api/remove_changed_packages', options);
 
     set_msg_state(message, state);
     notify(user, message, state, true);

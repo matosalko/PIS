@@ -87,13 +87,13 @@ async function send_change() {;
     };
     await fetch('/api/remove_changed_packages/', options);
 
-    for(item of new_packages){
+    for(package_id of new_packages){
         options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({item, changed_insurance_id}) //data odosielane v requeste
+            body: JSON.stringify({package_id, changed_insurance_id}) //data odosielane v requeste
         };
         await fetch('/api/insert_changed_packages/', options);
     }

@@ -177,7 +177,7 @@ app.delete('/api/remove_changed_packages/', (request, response) => {
 //vlozi baliky zmenenej poistky
 app.post('/api/insert_changed_packages/', (request, response) => {
     let data = request.body;
-    const query = `INSERT INTO changed_insurance_packages (changed_insurance_id, package_id) VALUES (${data.changed_insurance_id}, ${data.item.package_id});`;
+    const query = `INSERT INTO changed_insurance_packages (changed_insurance_id, package_id) VALUES (${data.changed_insurance_id}, ${data.package_id});`;
 
     pool.query(query, (err, res) => {
         if(err) {
