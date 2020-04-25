@@ -38,8 +38,61 @@ async function get_vehicle() {
 }
 
 //zisti, ci ma poistenec pravo na vernostnu zlavu
-function chceck_for_discount() {
-    //TODO
+async function chceck_for_discount() {
+    let registration_date = user.registered_at;
+    registration_date = registration_date.split('T')[0];
+    const five_years = 1826;
+
+
+    let url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/Calendar'
+    let xml = 
+    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/calendar/types">' +
+    '<soapenv:Header/>' +
+        '<soapenv:Body>' +
+            '<typ:getCurrentDate/>' +
+        '</soapenv:Body>' +
+    '</soapenv:Envelope>'
+
+    let options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/xml'
+        },
+        body: xml
+    };
+    let response = await fetch(url, options);
+
+    const parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(await response.text(), 'text/xml');
+    
+    let current_date = xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue;
+
+    xml = 
+    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/calendar/types">' +
+    '<soapenv:Header/>' +
+        '<soapenv:Body>' +
+        '<typ:convertIntervalToDays>' +
+            `<date1>${registration_date}</date1>` +
+            `<date2>${current_date}</date2>` +
+        '</typ:convertIntervalToDays>' +
+        '</soapenv:Body>' +
+    '</soapenv:Envelope>'
+
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/xml'
+        },
+        body: xml
+    };
+    response = await fetch(url, options);
+    xmlDoc = parser.parseFromString(await response.text(), 'text/xml');
+
+    const days_registered = xmlDoc.getElementsByTagName('days')[0].childNodes[0].nodeValue
+
+    if(days_registered >= five_years) {
+        changed_insuracne.discount = 10;    //zlava v percentach
+    }
 }
 
 function add_info_to_row(id, text) {
@@ -69,17 +122,20 @@ async function create_proposal() {
     await get_packages();
     await get_vehicle();
 
-    chceck_for_discount();
+    await chceck_for_discount();
 
     //pridanie riadkov s balikmi v upravenej zmluve
     for(item of packages) {
         add_row(item.name, item.price);
         total_price += item.price;
     }
+  
+    const discount_percent = changed_insuracne.discount || 0;
+    const discount = total_price * (discount_percent / 100);
 
+    let text = `-${discount} (${discount_percent}%)`
     //pridanie riadku so zlavou
-    let discount = changed_insuracne.discount || 0;
-    add_row('zlava', discount);
+    add_row('zlava', text);
 
     //pridanie riadku s celkovou cenou poistky
     total_price -= discount;
