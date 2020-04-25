@@ -43,7 +43,7 @@ async function chceck_for_discount() {
     registration_date = registration_date.split('T')[0];
     const five_years = 1826;
 
-
+    //zistenie aktualneho datumu
     let url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/Calendar'
     let xml = 
     '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/calendar/types">' +
@@ -67,6 +67,7 @@ async function chceck_for_discount() {
     
     let current_date = xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue;
 
+    //zistenie intervalu (v dnoch) medzi aktualnym datumom a datumom registracie pouzivatela
     xml = 
     '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/calendar/types">' +
     '<soapenv:Header/>' +
@@ -182,7 +183,7 @@ async function approve() {
     localStorage.removeItem('changed_insurance');
     localStorage.removeItem('selected_insurance_id');
 
-    document.location.href = 'client.html';
+    document.location.href = 'user_insurances.html';
 }
 
 function refuse() {

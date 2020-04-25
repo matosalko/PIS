@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIS projekt</title>
-
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    
     <script src="../js/user_insurances.js"></script>
 </head>
 <body>
-    <table id='ins_table'>
-        <tr>
-            <td>Cislo poistky</td>
-        </tr>
-    </table>
+    <div class="title">
+        <h1>Vase zmluvy</h1>
+    </div>
+    <div class="content">
+        <table id='ins_table'>
+            <tr>
+                <td>Cislo poistky</td>
+            </tr>
+        </table>
+    </div>
 
     <script>
         get_insurances()
     </script>
-    <button type="button" onclick="change_scene()">vyber</button>
 </body>
 </html>

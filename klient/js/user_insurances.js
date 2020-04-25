@@ -15,16 +15,18 @@ function create_table() {
         let tbl = document.getElementById("ins_table");
         let tr = document.createElement("tr");
         let td2 = document.createElement("td");
+        let btn = document.createElement("button");
 
         let text2 = `${item.insurance_number}`;
-        
 
-        td2.setAttribute('id', `${item.id}`);
-        td2.setAttribute('onclick', "select_insurance(this.id)")
+        btn.setAttribute('id', `${item.id}`);
+        btn.setAttribute('onclick', "select_insurance(this.id)");
+        btn.innerHTML = 'zmenit';
 
         td2.appendChild(document.createTextNode(text2));
         
         tr.appendChild(td2);
+        tr.appendChild(btn);
         tbl.appendChild(tr);
     }
 }
@@ -32,6 +34,8 @@ function create_table() {
 function select_insurance(insurance_id) {
     selected_insurance = insurances.find(item => item.id == insurance_id);
     localStorage.setItem('selected_insurance_id', selected_insurance.id);
+
+    change_scene();
 }
 
 function change_scene() {

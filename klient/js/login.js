@@ -56,6 +56,6 @@ async function login() {
         activ_user = json.body;
         
         localStorage.setItem('user_id', activ_user.id);
-        activ_user.user_type == 'zamestnanec' ? document.location.href = '/html/employee.html' : document.location.href = '/html/client.html';
+        activ_user.user_type == 'zamestnanec' ? document.location.href = '/html/employee.html' : document.location.href = '/html/user_insurances.html';
     }
 }
