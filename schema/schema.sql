@@ -6,7 +6,9 @@ create table users(
     date_of_birth date not null,
     registered_at date not null,
     notification text not null,
-    user_type text not null
+    user_type text not null,
+    phone text,
+    address text
 );
 
 create table vehicle(
