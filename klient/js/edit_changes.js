@@ -100,21 +100,25 @@ async function send_change() {;
 
     set_msg_state(message, state);
     notify(user, message, state);
+    alert("Zmena poistnej zmluvy bola upravená.");
+    document.location.href = '/html/employee.html';
 }
 
 async function send_denie() {
     let message = document.getElementById("message").value;
     let state = 'odmietnuta';
 
-    let options = {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({changed_insurance_id}) //data odosielane v requeste
-    };
-    await fetch('/api/remove_changed_packages/', options);
+    // let options = {
+    //     method: 'DELETE',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({changed_insurance_id}) //data odosielane v requeste
+    // };
+    // await fetch('/api/remove_changed_packages/', options);
 
     set_msg_state(message, state);
     notify(user, message, state);
+    alert("Zmena poistnej zmluvy bola zamietnutá.");
+    document.location.href = '/html/employee.html';
 }

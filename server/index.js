@@ -10,7 +10,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'pis',
-    password: 'vava2020',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
+    password: 'mamut9191',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
     port: 5432,
 })
 
@@ -79,6 +79,21 @@ app.get('/api/all_changed_insurances', (request, response) => {
     });
 });
 
+//vrati zmenenu poistku podla ID
+app.get('/api/get_changed_insurance/:id', (request, response) => {
+    const query = `select * from changed_insurance where id = ${request.params.id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: res.rows[0]
+            });
+        }
+    });
+});
+
 //upravi zmenenu poistku a nastavi spravu a stav
 app.post('/api/update_change_insurance/', (request, response) => {
     let data = request.body;
@@ -98,7 +113,7 @@ app.post('/api/update_change_insurance/', (request, response) => {
 //vlozi do databazy zmenenu poistku
 app.post('/api/changed_insurance/', (request, response) => {
     let data = request.body;
-    const query = `INSERT INTO changed_insurance (insurance_id, state, message, price, discount) VALUES (${data.insurance_id}, '${data.state}', ${data.message}, ${data.price}, ${data.discount}) returning id;`;
+    const query = `INSERT INTO changed_insurance (insurance_id, state, message, price, discount) VALUES (${data.insurance_id}, '${data.state}', ${data.message}, ${data.price}, ${data.discount}) returning id`;
 
     pool.query(query, (err, res) => {
         if(err) {
@@ -138,6 +153,40 @@ app.get('/api/insurance/:id', (request, response) => {
             response.json({
                 body: res.rows[0]
             });
+        }
+    });
+});
+
+app.post('/api/end_insurance/', (request, response) => {
+    let data = request.body;
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    console.log(date);
+
+    const query = `UPDATE insurance SET insurance_end_date = \'${date}\' WHERE id = ${data.insurance_id}`
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: 'ok'
+            })
+        }
+    });
+});
+
+app.post('/api/new_insurance/', (request, response) => {
+    let data = request.body;
+    const query = `INSERT INTO insurance (vehicle_id, user_id, insurance_number, created_at, insurance_end_date, price, discount) VALUES (${data.insurance.vehicle_id}, ${data.insurance.user_id}, '${data.insurance.insurance_number}', '${data.insurance.created_at}', '${data.insurance.insurance_end_date}', ${data.changed_insurance.price}, ${data.changed_insurance.discount}) returning id`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: res.rows[0].id
+            })
         }
     });
 });
@@ -247,6 +296,22 @@ app.get('/api/package/:id', (request, response) => {
             response.json({
                 body: res.rows[0]
             });
+        }
+    });
+});
+
+//vlozi balik prijatej poistky
+app.post('/api/insert_packages/', (request, response) => {
+    let data = request.body;
+    const query = `INSERT INTO insurance_packages (insurance_id, package_id) VALUES (${data.new_id}, ${data.package_id});`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
         }
     });
 });

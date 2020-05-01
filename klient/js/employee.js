@@ -67,3 +67,6 @@ async function create_table() {
 function change_scene() {
     document.location.href = '/html/check.html';
 }
+function log_off() {
+    document.location.href = '../index.html';
+}

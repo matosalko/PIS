@@ -78,19 +78,52 @@ async function accept() {
     let message = '';
     let state = 'prijata';
 
-    // const options = {
-    //     method: 'DELETE',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({changed_insurance_id})
-    // };
+    let response = await fetch(`/api/get_changed_insurance/${changed_insurance_id}`);
+    let json = await response.json();
+    changed_insurance = json.body;
 
-    //await fetch('/api/remove_changed_packages', options);
+    let options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({insurance_id})
+    };
+
+    await fetch('/api/end_insurance/', options);
+
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({insurance, changed_insurance})
+    };
+
+    response = await fetch('/api/new_insurance/', options);
+    json = await response.json();
+    let new_id = json.body;
+    console.log("toto je nove ID " + new_id);
+    console.log(changed_packages);
+
+
+    for(package of changed_packages) {
+        package_id = package.package_id;
+        options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({package_id, new_id}) //data odosielane v requeste
+        };
+        await fetch('/api/insert_packages/', options);
+    }
 
     set_msg_state(message, state);
-    notify(user, message, state, true);
-    notify(user, message, state);
+    // notify(user, message, state, true);
+    // notify(user, message, state);
+    alert("Zmena poistnej zmluvy bola prijatá.");
+    document.location.href = '/html/employee.html';
 }
 
 function change() {
