@@ -18,7 +18,7 @@ async function get_insurance() {
 
 //ziska konkretneho pouzivatela, koho sa poistka tyka
 async function get_user() {
-    const response = await fetch(`/api/user/${user_id}`);
+    const response = await fetch(`/api/user/${insurance.user_id}`);
     const json = await response.json();
     user = json.body;
 
@@ -40,6 +40,7 @@ async function get_changed_packages() {
     changed_packages = json.body;
 
     console.log('Vsetky zmenene baliky');
+    console.log('id poistky' + changed_insurance_id);
     console.log(changed_packages);
 }
 
@@ -120,8 +121,8 @@ async function accept() {
     }
 
     set_msg_state(message, state);
-    // notify(user, message, state, true);
-    // notify(user, message, state);
+    notify(user, message, state, true);
+    notify(user, message, state);
     alert("Zmena poistnej zmluvy bola prijatá.");
     document.location.href = '/html/employee.html';
 }

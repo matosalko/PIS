@@ -32,7 +32,7 @@ function set_ids(ids) {
     localStorage.setItem('insurance_id', ids[1]);
 
     console.log('ID poistky a jej zmenenej verzie');
-    console.log(ids[1] + ' ' + ids[1]);
+    console.log(ids[1] + ' ' + ids[0]);
 }
 
 async function create_table() {

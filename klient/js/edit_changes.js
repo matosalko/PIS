@@ -15,7 +15,7 @@ async function get_insurance() {
 }
 
 async function get_user() {
-    const response = await fetch(`/api/user/${user_id}`);
+    const response = await fetch(`/api/user/${insurance.user_id}`);
     const json = await response.json();
     user = json.body;
 
