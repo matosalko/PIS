@@ -10,7 +10,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'pis',
-    password: 'vava2020',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
+    password: 'mamut9191',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
     port: 5432,
 })
 
@@ -98,6 +98,22 @@ app.get('/api/get_changed_insurance/:id', (request, response) => {
 app.post('/api/update_change_insurance/', (request, response) => {
     let data = request.body;
     const query = `UPDATE changed_insurance SET message = \'${data.message}\', state = \'${data.state}\' WHERE id = ${data.changed_insurance_id}`;
+
+    pool.query(query, (err, res) => {
+        if(err) {
+            console.error(err);
+        } else {
+            response.json({
+                body: "ok"
+            })
+        }
+    });
+});
+
+//upravi cenu zmenenu poistku
+app.post('/api/update_change_insurance_price/', (request, response) => {
+    let data = request.body;
+    const query = `UPDATE changed_insurance SET price = ${data.price} WHERE id = ${data.changed_insurance_id}`;
 
     pool.query(query, (err, res) => {
         if(err) {
