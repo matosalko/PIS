@@ -82,20 +82,20 @@ async function create_proposal() {
 
     //pridanie riadkov s balikmi v upravenej zmluve
     for(item of packages) {
-        add_row(item.name, item.price);
+        add_row(item.name, `${item.price}€`);
         total_price += item.price;
     }
   
     const discount_percent = changed_insuracne.discount || 0;
     const discount = total_price * (discount_percent / 100);
 
-    let text = `-${discount} (${discount_percent}%)`
+    let text = `-${discount}€ (${discount_percent}%)`
     //pridanie riadku so zlavou
     add_row('zlava', text);
 
     //pridanie riadku s celkovou cenou poistky
     total_price -= discount;
-    add_row('cena celkovo', total_price);
+    add_row('cena celkovo', `${total_price}€ / mesiac`);
     
 
     //pridnaie info do tabulky info

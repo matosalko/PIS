@@ -3,6 +3,8 @@ let packages;
 let packages_in_insurance;
 let pzp_before = false;
 let pzp_after = false;
+let vehicle;
+let insurance;
 
 async function get_all_packages() {
     let response = await fetch(`/api/package_all`);
@@ -14,9 +16,27 @@ async function get_all_packages() {
     packages_in_insurance = json.body;
 }
 
+async function get_insurance() {
+    const response = await fetch(`/api/insurance/${insurance_id}`);
+    const json = await response.json();
+
+    insurance = json.body;
+}
+
+async function get_vehicle() {
+    await get_insurance();
+    const response = await fetch(`/api/vehicle/${insurance.vehicle_id}`);
+    const json = await response.json();
+
+    vehicle = json.body;
+}
+
 async function show_packages() {
     await get_all_packages();
+    await get_vehicle();
 
+    let title = document.getElementById('insurance_title');
+    title.innerHTML = `Poistenie vozidla ${vehicle.ecv}`
     create_table();
 }
 
@@ -27,6 +47,7 @@ function create_table() {
         let box = document.createElement("input");
         let td1 = document.createElement("td");
         let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
         
         let name = `${item.name}`;
         let info = `${item.description}`;
@@ -43,8 +64,9 @@ function create_table() {
 
         td1.appendChild(document.createTextNode(name));
         td2.appendChild(document.createTextNode(info));
+        td3.appendChild(box);
         
-        tr.appendChild(box);
+        tr.appendChild(td3);
         tr.appendChild(td1);
         tr.appendChild(td2);
         tbl.appendChild(tr);

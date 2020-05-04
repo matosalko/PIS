@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIS projekt</title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/contract_proposal.css">
     
     <script src="../js/contract_proposal.js"></script>
     <script src="../js/get_days_between.js"></script>
 </head>
 <body>
     <div class="title">
-        <h1 id="insurance_title"></h1>
+        <h1 >Návrh zmluvy</h1>
     </div>
-    <table id='info_table'>
+    <table id='info_table' class="info_table">
         <tr id="insured_user_name">
             <td>Meno poistenca:</td>
         </tr>
@@ -28,10 +28,13 @@
         </tr>
     </table>
 
-    <table id='packages_table'>
+    <div class="title">
+        <h2>Balíky produktov</h2>
+    </div>
+    <table id='packages_table' class="packages_table">
         <tr>
-            <td>Nazov balika</td>
-            <td>Cena balika</td>
+            <th>Názov balíka</th>
+            <th>Cena balíka</th>
         </tr>
     </table>
 
@@ -39,8 +42,11 @@
         create_proposal()
     </script>
 
-<button type="button" onclick="refuse()">zamietnut</button>
-<button type="button" onclick="approve()">schvalit</button>
+    <div class="menu">
+        <button type="button" onclick="refuse()">zamietnuť</button>
+        <button type="button" onclick="approve()">schváliť</button>
+    </div>
+
 
 </body>
 </html>

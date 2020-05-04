@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIS projekt</title>
+    <link rel="stylesheet" type="text/css" href="../css/select_packages.css">
 
     <script src="../js/select_packages.js"></script>
     <script src="../js/get_days_between.js"></script>
 </head>
 <body>
+    <div class="title">
+        <h1 id="insurance_title">Poistenie vozidla</h1>
+    </div>
 
     <table id='packages_table'>
         <tr>
-            <td>Vybrat</td>
-            <td>Nazov balika</td>
-            <td>Informacie o baliku</td>
+            <th>Vybrať</th>
+            <th>Názov balíka</th>
+            <th>Informácie o balíku</th>
         </tr>
     </table>
 
@@ -22,6 +26,9 @@
         show_packages();
     </script>
 
-    <button type="button" onclick="change_packages()">pokracovat</button>
+    <div class="menu">
+        <button type="button" onclick="change_packages()">pokračovať</button>
+    </div>
+    
 </body>
 </html>

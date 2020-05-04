@@ -14,6 +14,7 @@ function create_table() {
     for(item of insurances) {
         let tbl = document.getElementById("ins_table");
         let tr = document.createElement("tr");
+        let td1 = document.createElement("td");
         let td2 = document.createElement("td");
         let btn = document.createElement("button");
 
@@ -21,12 +22,16 @@ function create_table() {
 
         btn.setAttribute('id', `${item.id}`);
         btn.setAttribute('onclick', "select_insurance(this.id)");
-        btn.innerHTML = 'zmenit';
+        btn.innerHTML = 'zmeniť';
+
+        td1.appendChild(btn);
+        td1.setAttribute('id', 'left');
 
         td2.appendChild(document.createTextNode(text2));
-        
+        td2.setAttribute('id', 'right');
+
         tr.appendChild(td2);
-        tr.appendChild(btn);
+        tr.appendChild(td1);
         tbl.appendChild(tr);
     }
 }
