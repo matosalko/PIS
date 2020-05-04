@@ -10,7 +10,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'pis',
-    password: 'mamut9191',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
+    password: 'vava2020',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
     port: 5432,
 })
 

@@ -1,6 +1,8 @@
 const insurance_id = localStorage.getItem('selected_insurance_id');
 let packages;
 let packages_in_insurance;
+let pzp_before = false;
+let pzp_after = false;
 
 async function get_all_packages() {
     let response = await fetch(`/api/package_all`);
@@ -31,7 +33,11 @@ function create_table() {
         
         box.setAttribute('type', 'checkbox');
         box.setAttribute('id', `${item.id}`);
-        if(packages_in_insurance.find(package => package.package_id == item.id)) {
+        let pack = packages_in_insurance.find(package => package.package_id == item.id)
+        if(pack) {
+            if(name == 'PZP') {
+                pzp_before = true;
+            }
             box.setAttribute('checked', 'true');
         }
 
@@ -45,8 +51,8 @@ function create_table() {
     }
 }
 
-function change_packages() {
-    
+async function change_packages() {
+    pzp_after = false;
 
     let changed_packages = []
     for(item of packages) {
@@ -56,9 +62,34 @@ function change_packages() {
                 'package_id': item.id
             };
             changed_packages.push(changed_package);
+            if(item.name == 'PZP') {
+                pzp_after = true;
+            }
         }
     }
-    localStorage.setItem('changed_insurance_packages', JSON.stringify(changed_packages));
 
-    document.location.href = 'contract_proposal.html';
+    if(pzp_before == true && pzp_after == false) {
+        //zistit ci je menej ako 6 tyzdnov pred koncom
+        let response = await fetch(`/api/insurance/${insurance_id}`);
+        let json = await response.json();
+        insurance = json.body;
+
+        let end_date = insurance.insurance_end_date.split('T')[0];
+        
+        let current_date = await get_current_date();
+        let days_between = await get_days_between(current_date, end_date);
+
+        if(days_between < 42) {
+            alert('PZP sa neda odstranit, pretoze je menej ako 6 tyzdnov pred koncom!');
+        }
+        else{
+            localStorage.setItem('changed_insurance_packages', JSON.stringify(changed_packages));
+            document.location.href = 'contract_proposal.html';
+        }
+    }
+    else {
+        localStorage.setItem('changed_insurance_packages', JSON.stringify(changed_packages));
+        document.location.href = 'contract_proposal.html';
+    }
+   
 }

@@ -43,53 +43,8 @@ async function chceck_for_discount() {
     registration_date = registration_date.split('T')[0];
     const five_years = 1826;
 
-    //zistenie aktualneho datumu
-    let url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/Calendar'
-    let xml = 
-    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/calendar/types">' +
-    '<soapenv:Header/>' +
-        '<soapenv:Body>' +
-            '<typ:getCurrentDate/>' +
-        '</soapenv:Body>' +
-    '</soapenv:Envelope>'
-
-    let options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'text/xml'
-        },
-        body: xml
-    };
-    let response = await fetch(url, options);
-
-    const parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(await response.text(), 'text/xml');
-    
-    let current_date = xmlDoc.getElementsByTagName('date')[0].childNodes[0].nodeValue;
-
-    //zistenie intervalu (v dnoch) medzi aktualnym datumom a datumom registracie pouzivatela
-    xml = 
-    '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://pis.predmety.fiit.stuba.sk/pis/calendar/types">' +
-    '<soapenv:Header/>' +
-        '<soapenv:Body>' +
-        '<typ:convertIntervalToDays>' +
-            `<date1>${registration_date}</date1>` +
-            `<date2>${current_date}</date2>` +
-        '</typ:convertIntervalToDays>' +
-        '</soapenv:Body>' +
-    '</soapenv:Envelope>'
-
-    options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'text/xml'
-        },
-        body: xml
-    };
-    response = await fetch(url, options);
-    xmlDoc = parser.parseFromString(await response.text(), 'text/xml');
-
-    const days_registered = xmlDoc.getElementsByTagName('days')[0].childNodes[0].nodeValue
+    let current_date = await get_current_date();
+    let days_registered = await get_days_between(registration_date, current_date);
 
     if(days_registered >= five_years) {
         changed_insuracne.discount = 10;    //zlava v percentach
