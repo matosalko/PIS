@@ -31,7 +31,7 @@ async function load_user() {
     await get_user();
     
     document.getElementById('name').innerHTML = `Meno poistenca: ${user.name} ${user.surname}`;
-    document.getElementById('insurance').innerHTML = `Cislo poistky: ${insurance.insurance_number}`;
+    document.getElementById('insurance').innerHTML = `Číslo poistky: ${insurance.insurance_number}`;
 }
 
 async function get_changed_packages() {

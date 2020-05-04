@@ -5,23 +5,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PIS projekt</title>
         <script src="../js/employee.js"></script>
-        <link rel="stylesheet" type="text/css" href="../css/select_packages.css">
+        <link rel="stylesheet" type="text/css" href="../css/employee.css">
     </head>
     <body>
         <div>
             <table id="ins_table">
                 <tr>
                     <th>ID</th>
-                    <th>Cislo poistky</th>
+                    <th>Číslo poistky</th>
                 </tr>
             </table>
+        </div>
 
             <script>
                 create_table();
             </script>
-
-            <button type="button" onclick="change_scene()">vyber</button>
-            <button type="button" onclick="log_off()">odhlasit</button> 
+        <div class="menu">
+            <button type="button" onclick="change_scene()">Vybrať</button>
+            <button type="button" onclick="log_off()">Odhlásiť</button> 
         </div>
     </body>
 </html>

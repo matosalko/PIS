@@ -6,20 +6,22 @@
         <title>PIS projekt</title>
         <script src="../js/edit_changes.js"></script>
         <script src="../js/set_msg_state.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/employee.css">
     </head>
     <body>
         <div>
             <script>
                 load_user();
             </script>
-
-            <p id="name"></p>
-            <p id="insurance"></p>
+            <div class="title">
+                <h1 id="name"></h1>
+                <h1 id="insurance"></h1>
+            </div>
 
             <table id='table'>
                 <tr>
-                    <td>Nazov</td>
-                    <td>Popis</td>
+                    <th>Názov</th>
+                    <th>Popis</th>
                 </tr>
             </table>
 
@@ -27,10 +29,15 @@
                 load_packages();
             </script>
 
-            <label>Odovodnenie:</label><br>
-            <textarea id="message"></textarea> 
-
-            <button type="button" onclick="send_change()">Odoslat</button>
+            <div class="title">
+                <h2>Odôvodnenie:</h2>
+            </div>
+            <div class="text">
+                <textarea id="message"></textarea>
+            </div>
+            <div class="menu">
+                <button type="button" onclick="send_change()">Odoslať</button>
+            </div>
         </div>
     </body>
 </html>

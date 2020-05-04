@@ -6,19 +6,27 @@
         <title>PIS projekt</title>
         <script src="../js/edit_changes.js"></script>
         <script src="../js/set_msg_state.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/employee.css">
     </head>
     <body>
-        <div>
-            <script>
-                load_user();
-            </script>
-            <p>Zmena poistky bola zamietnuta</p>
-            <p id="name"></p>
-            <p id="insurance"></p>
-            <p>Odovodnenie zamietnutia</p>
+        <script>
+            load_user();
+        </script>
 
+        <div class="title">
+            <h1>Zmena poistky bola zamietnutá</h1>
+            <h2 id="name"></h2>
+            <h2 id="insurance"></h2>
+        </div>
+
+        <div class="title">
+            <h2>Odôvodnenie:</h2>
+        </div>
+        <div class="text">
             <textarea id="message"></textarea>
-            <button type="button" onclick="send_denie()">Odoslat</button>
+        </div>
+        <div class="menu">
+            <button type="button" onclick="send_denie()">Odoslať</button>
         </div>
     </body>
 </html>

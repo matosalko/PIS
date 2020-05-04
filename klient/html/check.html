@@ -8,18 +8,21 @@
 
         <script src="../js/check.js"></script>
         <script src="../js/set_msg_state.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/employee.css">
     </head>
     <body>
         <script>
             load_user();
         </script>
 
-        <p id="name"></p>
-        <p id="insurance"></p>
+        <div class="title">
+            <h1 id="name"></h1>
+            <h1 id="insurance"></h1>
+        </div>
 
         <table id='ins_table'>
             <tr>
-                <th>Nazov balika</th>
+                <th>Názov balíka</th>
                 <th>Popis</th>
             </tr>
         </table>
@@ -29,9 +32,9 @@
         </script>
         
         <div class="menu">
-            <button type="button" onclick="accept()">Prijat</button> 
-            <button type="button" onclick="change()">Upravit</button> 
-            <button type="button" onclick="denie()">Odmietnut</button> 
+            <button type="button" onclick="accept()">Prijať</button> 
+            <button type="button" onclick="change()">Upraviť</button> 
+            <button type="button" onclick="denie()">Odmietnuť</button> 
         </div>
         
     </body>
