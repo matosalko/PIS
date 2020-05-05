@@ -4,8 +4,11 @@ const {Pool, Client} = require('pg'); //databaza
 const async = require('async');
 const express = require('express');
 const app = express();
+const soap = require('soap');
 const crypto = require('crypto')
+const { v4: uuidv4 } = require('uuid');
 
+app.set('view engine', 'ejs');
 app.listen(3000, () => console.log('server listening at port 3000'));
 app.use(express.static('../klient'));
 app.use(express.json());
@@ -18,6 +21,22 @@ const pool = new Pool({
     port: 5432,
     connectionTimeoutMillis: 5000
 });
+
+function notify(email, subject, message) {
+    const url = 'http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/Email?WSDL'
+    const args = {
+        team_id: '062',
+        password: '88JMQ1',
+        email: email,
+        subject: subject,
+        message: message
+    }
+    soap.createClient(url, function(err, client) {
+        client.notify(args, function(err, result) {
+            console.log(`SOAP result: ${result}`);
+        });
+    });
+}
 
 function hashData(data) {
     return crypto.createHash("sha256").update(data).digest("hex");
@@ -42,7 +61,7 @@ app.post('/api/login', (request, response) => {
             if(res.rows[0]) {
                 activ_user = res.rows[0];
                 // skontroluj ci sa jedna o zamestnanca
-                if(res.rows[0].user_type == 'zamestnanec'){
+                if(res.rows[0].user_type === 'zamestnanec'){
                     console.log(res.rows[0].user_type);
                 }
                 response.json({
@@ -55,6 +74,79 @@ app.post('/api/login', (request, response) => {
                     status: 'fail',
                     body: undefined
                 });
+            }
+        }
+    });
+});
+
+app.post('/api/reset_password', (request, response) => {
+    const {email} = request.body;
+    const token = uuidv4().replace(/-/g, "");
+
+    pool.query("update users set reset_token = $1 where email = $2", [token, email], (err, res) => {
+        if (err) {
+            console.error(err);
+        } else if (res.rowCount === 0) {
+            console.log(`User with e-mail ${email} not found!`);
+            response.status(404);
+            response.json({
+                status: 'fail',
+                body: 'Užívateľ nebol nájdeny!'
+            });
+        } else {
+            const resetLink = `http://${request.headers.host}/password/reset/${token}`;
+            notify(email, 'Resetovanie hesla', `Pre resetovanie hesla kliknite na tento odkaz: ${resetLink}`);
+
+            console.log(`Reset token generated for ${email} (${token})`);
+            response.json({
+                status: 'success',
+                body: undefined
+            });
+        }
+    });
+});
+
+app.get('/password/reset/:token', (request, response) => {
+    const token = request.params.token;
+    pool.query("select * from users where reset_token = $1", [token], (err, res) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log(res.rows[0]);
+
+            if (res.rows[0]) {
+                const userId = res.rows[0].id;
+                const newPassword = Math.random().toString(36).slice(2);
+                const newPasswordHash = hashData(newPassword);
+                pool.query("update users set password = $1 where id = $2", [newPasswordHash, userId], (err, res) => {
+                    if (err) {
+                        console.error(err);
+                    } else if (res.rowCount === 0) {
+                        response.render('index', {
+                            success: false,
+                            message: "Nesprávny token.",
+                        });
+                    } else {
+                        pool.query("update users set reset_token = NULL where id = $1", [userId], (err, res) => {
+                            if (err) {
+                                console.error(err);
+                            } else if (res.rowCount === 0) {
+                                response.render('index', {
+                                    success: false,
+                                    message: "Nastala chyba pri vymazávaní tokenu.",
+                                });
+                            }
+                        })
+
+                        response.render('index', {
+                            success: true,
+                            message: "Nové heslo bolo úspešne vygenerovné.",
+                            password: newPassword
+                        });
+                    }
+                });
+            } else {
+
             }
         }
     });

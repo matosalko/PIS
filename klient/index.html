@@ -2,6 +2,7 @@
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIS projekt</title>
     <script src="js/login.js"></script>
 </head>
@@ -12,10 +13,10 @@
             <input type="text" id="email" name="email"><br>
             <label for="password">heslo:</label><br>
             <input type="password" id="password" name="password">
-            <button type="button"
-                onclick="login()">Prihlasit</button>
+            <button type="button" onclick="login()">Prihlasit</button>
+            <a href="javascript:goToForgottenPassword();">Zabudnute heslo?</a>
         </form>
-        <p id="error-message"></p>
+        <p id="result-message"></p>
     </div>
 </body>
 </html>

@@ -28,15 +28,15 @@ async function validateEmail(email) {
 }
 
 async function login() {
-    let email = document.getElementById('email').value;
-    let password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-    const errorElement = document.querySelector('#error-message');
+    const resultElement = document.querySelector('#result-message');
     if (!await validateEmail(email)) {
-        errorElement.innerHTML = 'E-mail nie je validny';
+        resultElement.innerHTML = 'E-mail nie je validny';
         return;
     } else {
-        errorElement.innerHTML = '';
+        resultElement.innerHTML = '';
     }
 
     const data = {email, password};
@@ -52,12 +52,46 @@ async function login() {
     const json = await response.json();
 
     // treba rozlisit userov
-    if (json.status == 'success') {
+    if (json.status === 'success') {
         activ_user = json.body;
         
         localStorage.setItem('user_id', activ_user.id);
-        activ_user.user_type == 'zamestnanec' ? document.location.href = '/html/employee.html' : document.location.href = '/html/user_insurances.html';
+        activ_user.user_type === 'zamestnanec' ? document.location.href = '/html/employee.html' : document.location.href = '/html/user_insurances.html';
     } else {
-        errorElement.innerHTML = 'Nie je možné sa prihlásiť, skontroluje e-mail a heslo.';
+        resultElement.innerHTML = 'Nie je možné sa prihlásiť, skontroluje e-mail a heslo.';
     }
+}
+
+async function resetPassword() {
+    const email = document.getElementById('email').value;
+    const resultElement = document.querySelector('#result-message');
+
+    if (!await validateEmail(email)) {
+        resultElement.innerHTML = 'E-mail nie je validny';
+        return;
+    } else {
+        resultElement.innerHTML = '';
+    }
+
+    const data = {email};
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)  //data odosielane v requeste
+    };
+
+    const response = await fetch('/api/reset_password', options)
+    const json = await response.json();
+
+    if (json.status === 'success') {
+        resultElement.innerHTML = 'Heslo bolo úspešne resetované, skontrolujte si svoju e-mailovú schránku.';
+    } else {
+        resultElement.innerHTML = 'Nepodarilo sa resetovať heslo.';
+    }
+}
+
+function goToForgottenPassword() {
+    document.location.href = '/html/password_reset.html';
 }

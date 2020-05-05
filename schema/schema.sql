@@ -4,6 +4,7 @@ create table users(
     surname text not null,
     email text not null,
     password text not null,
+    reset_token text,
     date_of_birth date not null,
     registered_at date not null,
     notification text not null,
