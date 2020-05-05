@@ -29,7 +29,7 @@ async function validateEmail(email) {
 
 async function login() {
     let email = document.getElementById('email').value;
-    let password = document.getElementById('password').value;   //treba zahashovat
+    let password = document.getElementById('password').value;
 
     const errorElement = document.querySelector('#error-message');
     if (!await validateEmail(email)) {
@@ -52,10 +52,12 @@ async function login() {
     const json = await response.json();
 
     // treba rozlisit userov
-    if(json.status == 'success') {
+    if (json.status == 'success') {
         activ_user = json.body;
         
         localStorage.setItem('user_id', activ_user.id);
         activ_user.user_type == 'zamestnanec' ? document.location.href = '/html/employee.html' : document.location.href = '/html/user_insurances.html';
+    } else {
+        errorElement.innerHTML = 'Nie je možné sa prihlásiť, skontroluje e-mail a heslo.';
     }
 }

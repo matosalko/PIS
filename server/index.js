@@ -1,25 +1,37 @@
+require('dotenv').config();
+
 const {Pool, Client} = require('pg'); //databaza
 const async = require('async');
-const express = require('express'); 
+const express = require('express');
 const app = express();
+const crypto = require('crypto')
+
 app.listen(3000, () => console.log('server listening at port 3000'));
 app.use(express.static('../klient'));
 app.use(express.json());
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'pis',
-    password: 'mamut9191',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_NAME || 'pis',
+    password: process.env.DB_PASS || 'mamut9191',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
     port: 5432,
-})
+    connectionTimeoutMillis: 5000
+});
+
+function hashData(data) {
+    return crypto.createHash("sha256").update(data).digest("hex");
+}
 
 //---------------POUZIVATEL---------------------------
 //prihlasenie pouzivatela
 app.post('/api/login', (request, response) => {
     const {email, password} = request.body;
+
+    const hash = hashData(password);
+
     const query = `select * from users where email = $1 and password = $2`;
-    const values = [email, password];
+    const values = [email, hash];
 
     pool.query(query, values, (err, res) => {
         if(err) {
@@ -36,16 +48,16 @@ app.post('/api/login', (request, response) => {
                 response.json({
                     status: 'success',
                     body: res.rows[0],
-                });    
+                });
 
             } else {
                 response.json({
-                   status: 'fail',
-                   body: undefined 
+                    status: 'fail',
+                    body: undefined
                 });
             }
         }
-    }); 
+    });
 });
 
 //vracia pouzivatela na zaklade id
@@ -256,7 +268,7 @@ app.post('/api/insert_changed_packages/', (request, response) => {
 });
 
 //----------------------BALIKY-----------------------------
-//vracia len tie baliky, ktore su zahrnute v zmenenych balikoch 
+//vracia len tie baliky, ktore su zahrnute v zmenenych balikoch
 app.get('/api/package/:id', (request, response) => {
     const query = `select * from product_packages where id = ${request.params.id}`;
 
