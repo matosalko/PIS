@@ -3,6 +3,7 @@ create table users(
     name text not null,
     surname text not null,
     email text not null,
+    password text not null,
     date_of_birth date not null,
     registered_at date not null,
     notification text not null,
