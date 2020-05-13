@@ -2,13 +2,35 @@
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
-    <title>PIS projekt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poisťovňa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/new_password.css">
 </head>
 <body>
-<p><%= message %></p>
-<%if (success) { %>
-    <p>Vaše novo vygenerovné heslo: <b><%= password %></b></p>
-<% } %>
-<a href="/">Späť na prihlásenie</a>
+
+<div class="center-menu">
+    <h3 class="center-align">Vygenerovanie nového hesla</h3>
+    <div class="card mt-6">
+        <div class="card-content">
+            <span class="card-title mb-2">Nové heslo</span>
+            <div class="center-align">
+                <p><%= message %></p>
+            </div>
+            <%if (success) { %>
+                <p class="center-align">Vaše novo vygenerovné heslo:</p>
+                <div class="center-align mt-4">
+                    <b class="monospace"><%= password %></b>
+                </div>
+            <% } %>
+            <div class="center-align mt-5">
+                <button class="btn waves-effect" type="submit" onclick="goToMainPage()">Späť na prihlásenie</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="/js/new_password.js"></script>
 </body>
 </html>

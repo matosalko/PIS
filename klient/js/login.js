@@ -31,12 +31,28 @@ async function login() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    const resultElement = document.querySelector('#result-message');
     if (!await validateEmail(email)) {
-        resultElement.innerHTML = 'E-mail nie je validny';
+        if (!document.querySelector('#email').classList.contains('invalid')) {
+            document.querySelector('#email').classList.add('invalid');
+        }
+
+        let helperText = document.querySelector('#email-helper-text');
+        if (!helperText) {
+            helperText = document.createElement('span')
+            helperText.classList.add('helper-text');
+            helperText.id = 'email-helper-text';
+            helperText.setAttribute('data-error', 'Nesprávny e-mail');
+            document.querySelector('#email-input').appendChild(helperText);
+        }
         return;
     } else {
-        resultElement.innerHTML = '';
+        if (document.querySelector('#email').classList.contains('invalid')) {
+            document.querySelector('#email').classList.remove('invalid');
+        }
+        const helperText = document.querySelector('#email-helper-text');
+        if (helperText) {
+            helperText.remove();
+        }
     }
 
     const data = {email, password};
@@ -58,19 +74,35 @@ async function login() {
         localStorage.setItem('user_id', activ_user.id);
         activ_user.user_type === 'zamestnanec' ? document.location.href = '/html/employee.html' : document.location.href = '/html/user_insurances.html';
     } else {
-        resultElement.innerHTML = 'Nie je možné sa prihlásiť, skontroluje e-mail a heslo.';
+        M.toast({html: 'Nepodarilo sa prihlásiť, skontrolujte e-mail a heslo!', displayLength: 6000})
     }
 }
 
 async function resetPassword() {
     const email = document.getElementById('email').value;
-    const resultElement = document.querySelector('#result-message');
 
     if (!await validateEmail(email)) {
-        resultElement.innerHTML = 'E-mail nie je validny';
+        if (!document.querySelector('#email').classList.contains('invalid')) {
+            document.querySelector('#email').classList.add('invalid');
+        }
+
+        let helperText = document.querySelector('#email-helper-text');
+        if (!helperText) {
+            helperText = document.createElement('span')
+            helperText.classList.add('helper-text');
+            helperText.id = 'email-helper-text';
+            helperText.setAttribute('data-error', 'Nesprávny e-mail');
+            document.querySelector('#email-input').appendChild(helperText);
+        }
         return;
     } else {
-        resultElement.innerHTML = '';
+        if (document.querySelector('#email').classList.contains('invalid')) {
+            document.querySelector('#email').classList.remove('invalid');
+        }
+        const helperText = document.querySelector('#email-helper-text');
+        if (helperText) {
+            helperText.remove();
+        }
     }
 
     const data = {email};
@@ -86,10 +118,14 @@ async function resetPassword() {
     const json = await response.json();
 
     if (json.status === 'success') {
-        resultElement.innerHTML = 'Heslo bolo úspešne resetované, skontrolujte si svoju e-mailovú schránku.';
+        M.toast({html: 'Heslo bolo úspešne resetované, skontrolujte si svoju e-mailovú schránku', displayLength: Infinity})
     } else {
-        resultElement.innerHTML = 'Nepodarilo sa resetovať heslo.';
+        M.toast({html: 'Nepodarilo sa resetovať heslo', displayLength: 6000})
     }
+}
+
+function goToMainPage() {
+    document.location.href = '/index.html';
 }
 
 function goToForgottenPassword() {

@@ -1,22 +1,34 @@
 <!DOCTYPE html>
 <html lang="sk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIS projekt</title>
-    <script src="js/login.js"></script>
-</head>
-<body>
-    <div>
-        <form>
-            <label for="email">email:</label><br>
-            <input type="text" id="email" name="email"><br>
-            <label for="password">heslo:</label><br>
-            <input type="password" id="password" name="password">
-            <button type="button" onclick="login()">Prihlasit</button>
-            <a href="javascript:goToForgottenPassword();">Zabudnute heslo?</a>
-        </form>
-        <p id="result-message"></p>
-    </div>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Poisťovňa</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" type="text/css" href="css/login.css">
+    </head>
+    <body>
+        <div class="login-menu">
+            <h3 class="center-align">Poisťovňa</h3>
+            <div class="card mt-6">
+                <div class="card-content">
+                    <span class="card-title mb-2">Prihlásenie</span>
+                    <div id="email-input mt-5" class="input-field">
+                        <input id="email" name="email" type="email">
+                        <label for="email">E-mail</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="password" name="password" type="password" class="validate">
+                        <label for="password">Heslo</label>
+                    </div>
+                    <div class="right-align">
+                        <a class="waves-effect btn-flat" onclick="goToForgottenPassword()">Zabudnuté heslo</a>
+                        <button class="btn waves-effect" type="submit" onclick="login()">Prihlásiť</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="js/login.js"></script>
+    </body>
 </html>

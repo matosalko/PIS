@@ -1,0 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.login-menu {
+    width: 100%;
+    max-width: 430px;
+    margin: auto;
+}
+
+.mb-2 {
+    margin-bottom: 1em !important;
+}
+
+.mt-6 {
+    margin-top: 3em;
+}

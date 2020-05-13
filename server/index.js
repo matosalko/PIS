@@ -146,7 +146,11 @@ app.get('/password/reset/:token', (request, response) => {
                     }
                 });
             } else {
-
+                response.render('index', {
+                    success: false,
+                    message: "Nesprávny token",
+                    password: undefined
+                });
             }
         }
     });
