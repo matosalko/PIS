@@ -10,9 +10,6 @@ async function get_insurance() {
     let response = await fetch(`/api/insurance/${insurance_id}`);
     let json = await response.json();
     insurance = json.body;
-
-    console.log('Vybrata poistka');
-    console.log(insurance);
 }
 
 async function get_changed_insurance() {
@@ -25,9 +22,6 @@ async function get_user() {
     const response = await fetch(`/api/user/${insurance.user_id}`);
     const json = await response.json();
     user = json.body;
-
-    console.log('Vybraty pouzivatel');
-    console.log(user);
 }
 
 async function load_user() {
@@ -43,9 +37,6 @@ async function get_packages() {
     const response = await fetch('/api/package_all');
     const json = await response.json();
     packages = json.body;
-
-    console.log('Vsetky baliky');
-    console.log(packages);
 }
 
 async function load_packages() {
@@ -98,7 +89,6 @@ async function send_change() {;
     for(item of packages) {
         if (document.getElementById(`${item.id}`).checked) {
             new_packages.push(item.id);
-            console.log(item);
             price += item.price;
         }
     }

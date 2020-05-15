@@ -56,14 +56,7 @@ app.post('/api/login', (request, response) => {
         if(err) {
             console.error(err);
         } else {
-            console.log(res.rows[0]);
-
             if(res.rows[0]) {
-                activ_user = res.rows[0];
-                // skontroluj ci sa jedna o zamestnanca
-                if(res.rows[0].user_type === 'zamestnanec'){
-                    console.log(res.rows[0].user_type);
-                }
                 response.json({
                     status: 'success',
                     body: res.rows[0],
@@ -112,8 +105,6 @@ app.get('/password/reset/:token', (request, response) => {
         if (err) {
             console.error(err);
         } else {
-            console.log(res.rows[0]);
-
             if (res.rows[0]) {
                 const userId = res.rows[0].id;
                 const newPassword = Math.random().toString(36).slice(2);
@@ -285,7 +276,6 @@ app.post('/api/end_insurance/', (request, response) => {
     let data = request.body;
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    console.log(date);
 
     const query = `UPDATE insurance SET insurance_end_date = \'${date}\' WHERE id = ${data.insurance_id}`
 

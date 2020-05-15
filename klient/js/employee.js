@@ -8,9 +8,6 @@ async function get_changed_insurances() {
     const response = await fetch('/api/all_changed_insurances');
     const json = await response.json();
     changed_insurances = json.body;
-
-    console.log('Zmenene poistky');
-    console.log(changed_insurances);
 }
 
 //ziska originalne poistky, ktorych sa tykaju zmeny
@@ -21,8 +18,6 @@ async function get_insurances() {
         json.body.change_ins_id = item.id; //pridanie id zmenenej poistky
         insurances.push(json.body);
     }
-    console.log('Originalne poistky');
-    console.log(insurances);
 }
 
 function set_ids(ids) {
@@ -30,9 +25,6 @@ function set_ids(ids) {
 
     localStorage.setItem('changed_insurance_id', ids[0]);
     localStorage.setItem('insurance_id', ids[1]);
-
-    console.log('ID poistky a jej zmenenej verzie');
-    console.log(ids[1] + ' ' + ids[0]);
 }
 
 async function create_table() {

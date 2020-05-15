@@ -11,9 +11,6 @@ async function get_insurance() {
     let response = await fetch(`/api/insurance/${insurance_id}`);
     let json = await response.json();
     insurance = json.body;
-
-    console.log('Vybrata poistka');
-    console.log(insurance);
 }
 
 //ziska konkretneho pouzivatela, koho sa poistka tyka
@@ -21,9 +18,6 @@ async function get_user() {
     const response = await fetch(`/api/user/${insurance.user_id}`);
     const json = await response.json();
     user = json.body;
-
-    console.log('Vybraty pouzivatel');
-    console.log(user);
 }
 
 async function load_user() {
@@ -38,10 +32,6 @@ async function get_changed_packages() {
     const response = await fetch(`/api/all_changed_packages/${changed_insurance_id}`);
     const json = await response.json();
     changed_packages = json.body;
-
-    console.log('Vsetky zmenene baliky');
-    console.log('id poistky' + changed_insurance_id);
-    console.log(changed_packages);
 }
 
 async function get_packages() {
@@ -50,8 +40,6 @@ async function get_packages() {
         const json = await response.json();
         packages.push(json.body);
     }
-    console.log('Vsetky baliky');
-    console.log(packages);
 }
 
 async function load_packages() {
@@ -104,9 +92,6 @@ async function accept() {
     response = await fetch('/api/new_insurance/', options);
     json = await response.json();
     let new_id = json.body;
-    console.log("toto je nove ID " + new_id);
-    console.log(changed_packages);
-
 
     for(package of changed_packages) {
         package_id = package.package_id;
