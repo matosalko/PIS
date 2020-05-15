@@ -51,23 +51,38 @@ async function get_packages() {
 async function load_packages() {
     await get_packages();
 
+    response = await fetch(`/api/packages/${insurance_id}`);
+    json = await response.json();
+    packages_in_insurance = json.body;
+
     for(item of packages) {
         let tbl = document.getElementById("table");
         let tr = document.createElement("tr");
         let td1 = document.createElement("td");
         let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
         let label = document.createElement("label");
+        let label2 = document.createElement("label");
         let box = document.createElement("input");
 
         label.setAttribute('for', `${item.name}`);
+        label2.setAttribute('for', `${item.description}`);
         box.setAttribute('type', 'checkbox');
         box.setAttribute('id', `${item.id}`);
 
+        let pack = packages_in_insurance.find(packages => packages.package_id == item.id)
+        if(pack) {
+            box.setAttribute('checked', 'true');
+        }
+
         label.appendChild(document.createTextNode(item.name));
+        label2.appendChild(document.createTextNode(item.description));
 
         td1.appendChild(label);
         td2.appendChild(box);
+        td3.appendChild(label2);
         tr.appendChild(td1);
+        tr.appendChild(td3);
         tr.appendChild(td2);
         tbl.appendChild(tr);
     }
