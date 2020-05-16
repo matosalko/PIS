@@ -102,7 +102,7 @@ async function change_packages() {
         let days_between = await get_days_between(current_date, end_date);
 
         if(days_between < 42) {
-            alert('PZP sa neda odstranit, pretoze je menej ako 6 tyzdnov pred koncom!');
+            alert('PZP sa nedá odstrániť, pretože je menej ako ž týždňov pred koncom poistného obdobia!');
         }
         else{
             localStorage.setItem('changed_insurance_packages', JSON.stringify(changed_packages));

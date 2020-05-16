@@ -19,7 +19,7 @@ table {
     margin-right:auto;
 }
 
-.ins_table tr, th {
+table.ins_table th {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
     font-size: 20px;
@@ -28,7 +28,7 @@ table {
     background-color: #252627;
 }
 
-.ins_table th, td {
+table.ins_table td {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 15px;
     padding: 7px;
@@ -37,8 +37,8 @@ table {
     text-align: center;
 }
 
-.row tr:hover {
-    background-color: #000000;
+table.ins_table tr:hover td{
+    background-color: #a3a3a3;
 }
 
 .text {

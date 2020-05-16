@@ -17,7 +17,7 @@ const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
     database: process.env.DB_NAME || 'pis',
-    password: process.env.DB_PASS || 'mamut9191',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
+    password: process.env.DB_PASS || 'vava2020',   //HESLO TREBA ZMENIT PODLA TOHO AKE MAS TY NASTAVENE INAK TO NEPOJDE
     port: 5432,
     connectionTimeoutMillis: 5000
 });

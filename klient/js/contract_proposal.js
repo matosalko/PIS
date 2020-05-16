@@ -91,7 +91,7 @@ async function create_proposal() {
 
     let text = `-${discount}€ (${discount_percent}%)`
     //pridanie riadku so zlavou
-    add_row('zlava', text);
+    add_row('zľava', text);
 
     //pridanie riadku s celkovou cenou poistky
     total_price -= discount;
@@ -99,7 +99,7 @@ async function create_proposal() {
     
 
     //pridnaie info do tabulky info
-    add_info_to_row('insured_user_name', user.name);
+    add_info_to_row('insured_user_name', `${user.name} ${user.surname}`);
     add_info_to_row('insurance_number', insurance.insurance_number);
     add_info_to_row('phone', user.phone);
     add_info_to_row('SPZ', vehicle.ecv);
@@ -138,14 +138,20 @@ async function approve() {
     localStorage.removeItem('changed_insurance');
     localStorage.removeItem('selected_insurance_id');
 
+    alert('Návrh zmluvy bol odoslaný na kontrolu zamestnancovi poisťovňe.')
+
+    document.location.href = 'user_insurances.html';
+}
+
+function continue_changes() {
+    document.location.href = 'select_packages.html';
+}
+
+function stop_changes() {
     document.location.href = 'user_insurances.html';
 }
 
 function refuse() {
     localStorage.removeItem('changed_insurance_packages');
-
-    //TODO: treba sa spytat uzivatela ci chce dalej upravovat zmluvu alebo nie
-
-    //ak chce tak toto
-    document.location.href = 'select_packages.html';
+    document.location.href = 'screen_select.html';
 }
