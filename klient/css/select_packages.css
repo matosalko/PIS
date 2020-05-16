@@ -1,13 +1,13 @@
 .title {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    width: 70%;
+    width: 50%;
     margin-left:auto; 
     margin-right:auto;
 }
 
 table {
     border-spacing: 0px;
-    width: 70%;
+    width: 50%;
     margin-left:auto; 
     margin-right:auto;
 }
@@ -43,7 +43,7 @@ button:hover {
 }
 
 .menu {
-    width: 70%;
+    width: 50%;
     margin-left:auto; 
     margin-right:auto;
     padding: 20px;
